@@ -45,16 +45,11 @@ for i in range(1, 10):
 class Skills_Level_Form(Form):
     user_id = StringField('User Id:', validators=[InputRequired()])
     program_id = SelectField('Program:', choices=PROGRAM_CHOICES)
-    section = SelectField('Section Type:', choices=SECTION_CHOICES)
+    section_type = SelectField('Section Type:', choices=SECTION_CHOICES)
     level = SelectField('Level:', choices=PRODUCT_LEVEL_CHOICES)
     skill_type = SelectField('Skill Type:', choices=SKILL_TYPE_CHOICES)
     chapter_name = SelectField('Chapter:', choices=CHAPTER_CHOICES)
     submit = SubmitField('Seach')
-
-
-class RegisterForm(Form):
-    username = StringField('username', validators=[InputRequired(), Length(min=3, max=15)])
-    password = PasswordField('password', validators=[InputRequired(), Length(min=3, max=80)])
 
 
 @app.route('/')
@@ -64,11 +59,20 @@ def index():
 
 @app.route('/skills_level', methods=['GET', 'POST'])
 def skill_levels():
+    from api.testprep_service import query_user_skills_level
     form = Skills_Level_Form()
 
-    # if form.validate_on_submit():
-    data = None
-    return render_template('skills_level.html', form=form, title="Skill Levels", skill_levels=data)
+    if form.validate_on_submit():
+        data = query_user_skills_level(user_id=form.user_id.data,
+                                       program_id=form.program_id.data,
+                                       section_type=form.skill_type.data,
+                                       level=form.level.data,
+                                       skill_type=form.skill_type.data,
+                                       chapter_name=form.chapter_name.data)
+
+        return render_template('skills_level.html', form=form, title="Skill Levels", skill_levels=data)
+
+    return render_template('skills_level.html', form=form, title="Skill Levels")
 
 
 if __name__ == '__main__':
