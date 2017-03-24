@@ -44,14 +44,14 @@ def get_user_skill_level(**kwargs):
     program_id = kwargs.get("program_id")
     section_type = kwargs.get("section_type")
     level = kwargs.get("level")
-    skill_type = kwargs.get("level")
+    skill_type = kwargs.get("skill_type")
     keyword = kwargs.get("keyword")
 
     skill_status_query = {
         "user_id": user_id,
-        "program_id": program_id,
+        "program_id": int(program_id),
         "section_type": section_type,
-        "product_level": level,
+        "product_level": int(level),
         "skill_type": skill_type,
         "skill_section": keyword
     }
