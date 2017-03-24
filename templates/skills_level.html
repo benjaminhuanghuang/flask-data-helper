@@ -7,7 +7,7 @@
     {{ form.hidden_tag() }}
     <div class="row">
         <div class="col-md-2">
-            {{ wtf.form_field(form.user_id) }}
+            {{ wtf.form_field(form.user_name) }}
         </div>
         <div class="col-md-2">
             {{ wtf.form_field(form.program_id) }}
@@ -49,17 +49,19 @@
         {% for item in skill_levels %}
         <div class="row">
             <div class="col-md-3">
-                item.word
+                {{item.word}}
             </div>
             <div class="col-md-3">
-                item.level
+                {{item.level}}
             </div>
             <div class="col-md-3">
-                item.problem_type
+                {{item.problem_type}}
             </div>
         </div>
         {% endfor %}
     </div>
 </div><!--info panel-->
+{% else %}
+    <h1>No data</h1>
 {% endif %}
 {% endblock %}

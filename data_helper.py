@@ -12,7 +12,10 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'Thisissupposedtobesecret!'
 
-app.config['MONGO_URI'] = 'mongodb://localhost:27017/MathJoy'
+# app.config['MONGO_URI'] = 'mongodb://localhost:27017/MathJoy'
+app.config['MONGO_URI'] = 'mongodb://192.168.11.216:27017/MathJoy'  # Liuda
+# app.config['MONGO_URI'] = 'mongodb://192.168.11.119:27017/MathJoy'   # qas
+
 app.config['MONGO_DBNAME'] = 'MathJoy'
 
 mongo = PyMongo(app)
@@ -43,7 +46,7 @@ for i in range(1, 10):
 
 
 class Skills_Level_Form(Form):
-    user_id = StringField('User Id:', validators=[InputRequired()])
+    user_name = StringField('User Name:', validators=[InputRequired()])
     program_id = SelectField('Program:', choices=PROGRAM_CHOICES)
     section_type = SelectField('Section Type:', choices=SECTION_CHOICES)
     level = SelectField('Level:', choices=PRODUCT_LEVEL_CHOICES)
@@ -59,18 +62,21 @@ def index():
 
 @app.route('/skills_level', methods=['GET', 'POST'])
 def skill_levels():
-    from api.testprep_service import query_user_skills_level
+    from api.testprep_service import query_user_skills_level, get_user_id
     form = Skills_Level_Form()
 
     if form.validate_on_submit():
-        data = query_user_skills_level(user_id=form.user_id.data,
-                                       program_id=form.program_id.data,
-                                       section_type=form.skill_type.data,
-                                       level=form.level.data,
-                                       skill_type=form.skill_type.data,
-                                       chapter_name=form.chapter_name.data)
+        user_id = get_user_id(form.user_name.data)
+        if user_id:
+            data = query_user_skills_level(user_id=user_id,
+                                           program_id=form.program_id.data,
+                                           section_type=form.section_type.data,
+                                           level=form.level.data,
+                                           skill_type=form.skill_type.data,
+                                           chapter_name=form.chapter_name.data)
 
-        return render_template('skills_level.html', form=form, title="Skill Levels", skill_levels=data)
+            return render_template('skills_level.html', form=form, title="Skill Levels", skill_levels=data)
+        flash("Can not find user.")
 
     return render_template('skills_level.html', form=form, title="Skill Levels")
 

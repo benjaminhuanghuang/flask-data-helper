@@ -1,8 +1,8 @@
-from data_helper import app, mongo
+from data_helper import mongo
 import pymongo
 
 if __name__ != "__main__":
-    db = mongo.db[app.config['MONGO_DBNAME']]
+    db = mongo.db
 
 
 def query_user_skills_level(**kwargs):
@@ -10,7 +10,7 @@ def query_user_skills_level(**kwargs):
     program_id = kwargs.get("program_id")
     section_type = kwargs.get("section_type")
     level = kwargs.get("level")
-    skill_type = kwargs.get("level")
+    skill_type = kwargs.get("skill_type")
     chapter_name = kwargs.get("chapter_name")
 
     result = []
@@ -63,15 +63,26 @@ def get_user_skill_level(**kwargs):
         return 0
 
 
+def get_user_id(user_name):
+    u = db.users.find_one({"username": user_name})
+    if u:
+        return str(u["_id"])
+    else:
+        return None
+
+
 if __name__ == "__main__":
     from pymongo import MongoClient
 
-    conn = MongoClient("mongodb://localhost//MathJoy")
+    # conn = MongoClient("mongodb://localhost//MathJoy")
+    conn = MongoClient("mongodb://192.168.11.216//MathJoy")   # Liuda
     db = conn["MathJoy"]
-    res = query_user_skills_level(user_id="",
+    user_name = "qatp9"
+    user_id = get_user_id(user_name)
+    res = query_user_skills_level(user_id= user_id,
                                   program_id="2",
                                   section_type="isee.vr",
-                                  level=2,
+                                  level=1,
                                   skill_type="Word Application",
                                   chapter_name="Chapter1")
     print res
