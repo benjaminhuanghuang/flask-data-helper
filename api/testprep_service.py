@@ -28,7 +28,7 @@ def query_user_skills_level(**kwargs):
         for problem in problem_cursor:
             item = {}
             item["word"] = problem["section_id"]
-            item["problem_type"] = problem["wordApplication_problemType"]
+            item["problem_type"] = problem.get("wordApplication_problemType")
             item["level"] = get_user_skill_level(user_id=user_id,
                                                  program_id=program_id,
                                                  section_type=section_type,
@@ -83,6 +83,6 @@ if __name__ == "__main__":
                                   program_id="2",
                                   section_type="isee.vr",
                                   level=1,
-                                  skill_type="Word Application",
-                                  chapter_name="Chapter1")
+                                  skill_type="WordDefinitionPractice",
+                                  chapter_name="Chapter5")
     print res
